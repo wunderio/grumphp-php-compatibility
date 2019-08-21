@@ -6,7 +6,8 @@ Check if files are compatible with X version of PHP.
 ````yml
 parameters:
     tasks:
-        php_compatibility: ~
+        php_compatibility:
+            extensions:  [php, inc, module, install]
     extensions:
         - hkirsman\PhpCompatibilityTask\ExtensionLoader
 ````

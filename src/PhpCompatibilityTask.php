@@ -25,10 +25,10 @@ class PhpCompatibilityTask extends AbstractExternalTask
       $resolver = new OptionsResolver();
       $resolver->setDefaults(
         [
-          'triggered_by' => ['php', 'inc', 'module', 'install'],
+          'extensions' => ['php', 'inc', 'module', 'install'],
         ]
       );
-      $resolver->addAllowedTypes('triggered_by', ['array']);
+      $resolver->addAllowedTypes('extensions', ['array']);
       return $resolver;
     }
 
@@ -40,16 +40,13 @@ class PhpCompatibilityTask extends AbstractExternalTask
     public function run(ContextInterface $context): TaskResultInterface
     {
       $config = $this->getConfiguration();
-      $files = $context->getFiles()->extensions($config['triggered_by']);
+      $files = $context->getFiles()->extensions($config['extensions']);
       if (0 === count($files)) {
         return TaskResult::createSkipped($this, $context);
       }
 
         $arguments = $this->processBuilder->createArgumentsForCommand('phpcs');
-        // @todo: Start using configurations from yml.
-//        $arguments = $this->addArgumentsFromConfig($arguments, $config);
-//        $arguments->add('--report-json');
-        // @todo: Start using configurations from yml.
+        $arguments = $this->addArgumentsFromConfig($arguments, $config);
         $arguments->add('--standard=vendor/hkirsman/grumphp-php-compatibility/php-compatibility.xml');
         $arguments->addFiles($files);
 
@@ -58,14 +55,6 @@ class PhpCompatibilityTask extends AbstractExternalTask
 
         if (!$process->isSuccessful()) {
             $output = $this->formatter->format($process);
-//            try {
-//                $arguments = $this->processBuilder->createArgumentsForCommand('phpcbf');
-//                $arguments = $this->addArgumentsFromConfig($arguments, $config);
-//                $output .= $this->formatter->formatErrorMessage($arguments, $this->processBuilder);
-//            } catch (RuntimeException $exception) { // phpcbf could not get found.
-//                $output .= PHP_EOL.'Info: phpcbf could not get found. Please consider to install it for suggestions.';
-//            }
-
             return TaskResult::createFailed($this, $context, $output);
         }
 
@@ -76,18 +65,7 @@ class PhpCompatibilityTask extends AbstractExternalTask
         ProcessArgumentsCollection $arguments,
         array $config
     ): ProcessArgumentsCollection {
-        $arguments->addOptionalCommaSeparatedArgument('--standard=%s', (array) $config['standard']);
-        $arguments->addOptionalArgument('--tab-width=%s', $config['tab_width']);
-        $arguments->addOptionalArgument('--encoding=%s', $config['encoding']);
-        $arguments->addOptionalArgument('--report=%s', $config['report']);
-        $arguments->addOptionalIntegerArgument('--report-width=%s', $config['report_width']);
-        $arguments->addOptionalIntegerArgument('--severity=%s', $config['severity']);
-        $arguments->addOptionalIntegerArgument('--error-severity=%s', $config['error_severity']);
-        $arguments->addOptionalIntegerArgument('--warning-severity=%s', $config['warning_severity']);
-        $arguments->addOptionalCommaSeparatedArgument('--sniffs=%s', $config['sniffs']);
-        $arguments->addOptionalCommaSeparatedArgument('--ignore=%s', $config['ignore_patterns']);
-        $arguments->addOptionalCommaSeparatedArgument('--exclude=%s', $config['exclude']);
-
+        $arguments->addOptionalCommaSeparatedArgument('--extensions=%s', (array) $config['extensions']);
         return $arguments;
     }
 }
