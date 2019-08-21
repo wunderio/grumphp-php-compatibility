@@ -1,0 +1,8 @@
+parameters:
+    git_dir: .
+    bin_dir: vendor/bin
+    tasks:
+        php_compatibility:
+            triggered_by:  [php, inc, module, install]
+    extensions:
+        - hkirsman\PhpCompatibilityTask\ExtensionLoader
