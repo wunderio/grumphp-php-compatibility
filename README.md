@@ -9,9 +9,9 @@ parameters:
         php_compatibility:
             extensions:  [php, inc, module, install]
     extensions:
-        - hkirsman\PhpCompatibilityTask\ExtensionLoader
+        - wunderio\PhpCompatibilityTask\ExtensionLoader
 ````
 
 ### Composer
 
-``composer require --dev hkirsman/grumphp-php-compatibility``
+``composer require --dev wunderio/grumphp-php-compatibility``

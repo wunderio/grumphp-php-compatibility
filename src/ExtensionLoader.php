@@ -1,13 +1,13 @@
 <?php
-namespace hkirsman\PhpCompatibilityTask;
+namespace wunderio\PhpCompatibilityTask;
 use GrumPHP\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 /**
  * Class ExtensionLoader
  *
- * @author Matthias Vogel <matthias.vogel@pluswerk.ag>
- * @package PLUS\GrumphpBomTask
+ * @author Hannes Kirsman <hkirsman@gmail.com>
+ * @package wunderio\PhpCompatibilityTask
  */
 class ExtensionLoader implements ExtensionInterface
 {

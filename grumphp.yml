@@ -5,4 +5,4 @@ parameters:
         php_compatibility:
             extensions:  [php, inc, module, install]
     extensions:
-        - hkirsman\PhpCompatibilityTask\ExtensionLoader
+        - wunderio\PhpCompatibilityTask\ExtensionLoader

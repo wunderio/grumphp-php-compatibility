@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace hkirsman\PhpCompatibilityTask;
+namespace wunderio\PhpCompatibilityTask;
 
 use GrumPHP\Collection\ProcessArgumentsCollection;
 use GrumPHP\Runner\TaskResult;
@@ -47,7 +47,7 @@ class PhpCompatibilityTask extends AbstractExternalTask
 
         $arguments = $this->processBuilder->createArgumentsForCommand('phpcs');
         $arguments = $this->addArgumentsFromConfig($arguments, $config);
-        $arguments->add('--standard=vendor/hkirsman/grumphp-php-compatibility/php-compatibility.xml');
+        $arguments->add('--standard=vendor/wunderio/grumphp-php-compatibility/php-compatibility.xml');
         $arguments->addFiles($files);
 
         $process = $this->processBuilder->buildProcess($arguments);
