@@ -25,11 +25,11 @@ class PhpCompatibilityTask extends AbstractExternalTask
       $resolver = new OptionsResolver();
       $resolver->setDefaults(
         [
-          'extensions' => ['php', 'inc', 'module', 'install'],
+          'triggered_by' => ['php', 'inc', 'module', 'install'],
           'testVersion' => '7.3',
         ]
       );
-      $resolver->addAllowedTypes('extensions', ['array']);
+      $resolver->addAllowedTypes('triggered_by', ['array']);
       $resolver->addAllowedTypes('testVersion', 'string');
       return $resolver;
     }
@@ -42,7 +42,7 @@ class PhpCompatibilityTask extends AbstractExternalTask
     public function run(ContextInterface $context): TaskResultInterface
     {
       $config = $this->getConfiguration();
-      $files = $context->getFiles()->extensions($config['extensions']);
+      $files = $context->getFiles()->extensions($config['triggered_by']);
       if (0 === count($files)) {
         return TaskResult::createSkipped($this, $context);
       }
@@ -67,7 +67,7 @@ class PhpCompatibilityTask extends AbstractExternalTask
         ProcessArgumentsCollection $arguments,
         array $config
     ): ProcessArgumentsCollection {
-        $arguments->addOptionalCommaSeparatedArgument('--extensions=%s', (array) $config['extensions']);
+        $arguments->addOptionalCommaSeparatedArgument('--extensions=%s', (array) $config['triggered_by']);
         $arguments->addSeparatedArgumentArray('--runtime-set', ['testVersion', (string) $config['testVersion']]);
         return $arguments;
     }

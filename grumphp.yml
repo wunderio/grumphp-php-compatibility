@@ -4,6 +4,6 @@ parameters:
     tasks:
         php_compatibility:
             testVersion: "7.3"
-            extensions:  [php, inc, module, install]
+            triggered_by:  [php, inc, module, install]
     extensions:
         - wunderio\PhpCompatibilityTask\ExtensionLoader
