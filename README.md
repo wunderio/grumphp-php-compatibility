@@ -7,6 +7,7 @@ Check if files are compatible with X version of PHP.
 parameters:
     tasks:
         php_compatibility:
+            testVersion: "7.3"
             extensions:  [php, inc, module, install]
     extensions:
         - wunderio\PhpCompatibilityTask\ExtensionLoader

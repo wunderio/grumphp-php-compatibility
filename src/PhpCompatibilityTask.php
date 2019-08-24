@@ -26,9 +26,11 @@ class PhpCompatibilityTask extends AbstractExternalTask
       $resolver->setDefaults(
         [
           'extensions' => ['php', 'inc', 'module', 'install'],
+          'testVersion' => '7.3',
         ]
       );
       $resolver->addAllowedTypes('extensions', ['array']);
+      $resolver->addAllowedTypes('testVersion', 'string');
       return $resolver;
     }
 
@@ -66,6 +68,7 @@ class PhpCompatibilityTask extends AbstractExternalTask
         array $config
     ): ProcessArgumentsCollection {
         $arguments->addOptionalCommaSeparatedArgument('--extensions=%s', (array) $config['extensions']);
+        $arguments->addSeparatedArgumentArray('--runtime-set', ['testVersion', (string) $config['testVersion']]);
         return $arguments;
     }
 }

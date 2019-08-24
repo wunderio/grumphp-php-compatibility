@@ -3,6 +3,7 @@ parameters:
     bin_dir: vendor/bin
     tasks:
         php_compatibility:
+            testVersion: "7.3"
             extensions:  [php, inc, module, install]
     extensions:
         - wunderio\PhpCompatibilityTask\ExtensionLoader
