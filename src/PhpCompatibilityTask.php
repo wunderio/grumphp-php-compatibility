@@ -63,7 +63,7 @@ class PhpCompatibilityTask extends AbstractExternalTask
       if ($this->isRunningFullCodeBase()) {
         // Add parallel workers as full code base scans can take long time.
         $arguments->add('--parallel=20');
-        $arguments->add($config["codebase_path"]);
+        $arguments->add($config['codebase_path']);
       }
       else {
         $arguments->addFiles($files);
