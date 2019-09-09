@@ -27,12 +27,14 @@ class PhpCompatibilityTask extends AbstractExternalTask
         [
           'triggered_by' => ['php', 'inc', 'module', 'install'],
           'testVersion' => '7.3',
+          'report_width' => 120,
           'ignore_patterns' => ['*/vendor/*','*/node_modules/*'],
           'codebase_path' => '.',
         ]
       );
       $resolver->addAllowedTypes('triggered_by', ['array']);
       $resolver->addAllowedTypes('testVersion', 'string');
+      $resolver->addAllowedTypes('report_width', ['null', 'int']);
       $resolver->addAllowedTypes('ignore_patterns', ['array']);
       $resolver->addAllowedTypes('codebase_path', 'string');
       return $resolver;
@@ -86,6 +88,7 @@ class PhpCompatibilityTask extends AbstractExternalTask
     ): ProcessArgumentsCollection {
         $arguments->addOptionalCommaSeparatedArgument('--extensions=%s', (array) $config['triggered_by']);
         $arguments->addSeparatedArgumentArray('--runtime-set', ['testVersion', (string) $config['testVersion']]);
+        $arguments->addOptionalIntegerArgument('--report-width=%s', $config['report_width']);
         $arguments->addOptionalCommaSeparatedArgument('--ignore=%s', $config['ignore_patterns']);
         return $arguments;
     }
