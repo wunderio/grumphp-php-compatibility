@@ -5,5 +5,7 @@ parameters:
         php_compatibility:
             testVersion: "7.3"
             triggered_by:  [php, inc, module, install]
+            ignore_patterns: ['*/vendor/*','*/node_modules/*']
+            codebase_path: "."
     extensions:
         - wunderio\PhpCompatibilityTask\ExtensionLoader
