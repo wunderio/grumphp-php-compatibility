@@ -61,6 +61,8 @@ class PhpCompatibilityTask extends AbstractExternalTask
 
       // @todo: Until GrumPHP does not have solution for 'run' command with lots of files we'll use our custom codebase_path parameter with custom check for 'run' command.
       if ($this->isRunningFullCodeBase()) {
+        // Add parallel workers as full code base scans can take long time.
+        $arguments->add('--parallel=20');
         $arguments->add($config["codebase_path"]);
       }
       else {
