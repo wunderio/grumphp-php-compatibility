@@ -27,10 +27,16 @@ class PhpCompatibilityTask extends AbstractExternalTask
         [
           'triggered_by' => ['php', 'inc', 'module', 'install'],
           'testVersion' => '7.3',
+          'report_width' => 120,
+          'ignore_patterns' => ['*/vendor/*','*/node_modules/*'],
+          'codebase_path' => '.',
         ]
       );
       $resolver->addAllowedTypes('triggered_by', ['array']);
       $resolver->addAllowedTypes('testVersion', 'string');
+      $resolver->addAllowedTypes('report_width', ['null', 'int']);
+      $resolver->addAllowedTypes('ignore_patterns', ['array']);
+      $resolver->addAllowedTypes('codebase_path', 'string');
       return $resolver;
     }
 
@@ -42,7 +48,11 @@ class PhpCompatibilityTask extends AbstractExternalTask
     public function run(ContextInterface $context): TaskResultInterface
     {
       $config = $this->getConfiguration();
-      $files = $context->getFiles()->extensions($config['triggered_by']);
+      $files = $context
+        ->getFiles()
+        ->notPaths($config['ignore_patterns'])
+        ->extensions($config['triggered_by']);
+
       if (0 === count($files)) {
         return TaskResult::createSkipped($this, $context);
       }
@@ -50,7 +60,16 @@ class PhpCompatibilityTask extends AbstractExternalTask
         $arguments = $this->processBuilder->createArgumentsForCommand('phpcs');
         $arguments = $this->addArgumentsFromConfig($arguments, $config);
         $arguments->add('--standard=vendor/wunderio/grumphp-php-compatibility/php-compatibility.xml');
+
+      // @todo: Until GrumPHP does not have solution for 'run' command with lots of files we'll use our custom codebase_path parameter with custom check for 'run' command.
+      if ($this->isRunningFullCodeBase()) {
+        // Add parallel workers as full code base scans can take long time.
+        $arguments->add('--parallel=20');
+        $arguments->add($config['codebase_path']);
+      }
+      else {
         $arguments->addFiles($files);
+      }
 
         $process = $this->processBuilder->buildProcess($arguments);
         $process->run();
@@ -69,6 +88,18 @@ class PhpCompatibilityTask extends AbstractExternalTask
     ): ProcessArgumentsCollection {
         $arguments->addOptionalCommaSeparatedArgument('--extensions=%s', (array) $config['triggered_by']);
         $arguments->addSeparatedArgumentArray('--runtime-set', ['testVersion', (string) $config['testVersion']]);
+        $arguments->addOptionalIntegerArgument('--report-width=%s', $config['report_width']);
+        $arguments->addOptionalCommaSeparatedArgument('--ignore=%s', $config['ignore_patterns']);
         return $arguments;
+    }
+
+  /**
+   * Check if running against full codebase.
+   *
+   * @return bool
+   */
+    private function isRunningFullCodeBase() {
+      global $argv;
+      return in_array('run', $argv);
     }
 }
